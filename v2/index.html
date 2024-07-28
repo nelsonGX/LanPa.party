@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanPa v2</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="container">
+        <header>
+            <div class="lanpa"><h1>LanPa</h1><h2>v2</h2></div>
+            <p class="description">準備好來場超酷的 LAN 派對了嗎？<br>來宜蘭讓無聊的暑假添增點樂趣吧！</p>
+            <a href="/about">更多關於 LanPa 的資訊...</a><br/><br/><br/>
+            <a href="https://t.me/nelsongx" class="cta-button">TG 聯絡 @nelsongx 加入</a>
+        </header>
+
+        <section class="details">
+            <h2>活動詳情</h2>
+            <ul>
+                <li><strong>地點：</strong><a href="https://maps.app.goo.gl/jPNsTwVBcPY5CpVGA">漫漫時光渡假民宿</a></li>
+                <li><strong>時間：</strong>2024年8月13日 - 8月15日</li>
+                <li><strong>費用：</strong>若達 12 人，住宿攤提 NT$1750 / 人</li>
+                <li><strong>攜帶物品：</strong>個人電腦或筆電、網路線、衣服</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('particles'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const particles = new THREE.BufferGeometry();
+        const particleCount = 1000;
+
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 10;
+            colors[i] = Math.random();
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const material = new THREE.PointsMaterial({ size: 0.05, vertexColors: true });
+        const particleSystem = new THREE.Points(particles, material);
+        scene.add(particleSystem);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particleSystem.rotation.x += 0.001;
+            particleSystem.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
